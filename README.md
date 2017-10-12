@@ -4,6 +4,8 @@
 
 This example shows how to copy and paste elements programatically using [bpmn-js](https://github.com/bpmn-io/bpmn-js).
 
+![pasted screenshot](./resources/screenshot.png)
+
 
 ## Features
 
