@@ -22,11 +22,11 @@ describe('copy-paste', function() {
 
       // copy/paste a whole pool
       copy(modeler, 'POOL');
-      paste(modeler, 'COLLABORATION', { x: 400, y: 400 });
+      paste(modeler, 'COLLABORATION', { x: 600, y: 400 });
 
       // copy/paste a start event only
       copy(modeler, 'START_PROCESS');
-      paste(modeler, 'POOL', { x: 300, y: 150 });
+      paste(modeler, 'POOL', { x: 300, y: 130 });
 
       done();
     });
