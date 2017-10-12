@@ -53,7 +53,6 @@ function copy(modeler, elementId) {
       copyPaste = modeler.get('copyPaste'),
       elementRegistry = modeler.get('elementRegistry');
 
-
   // get element to be copied
   var element = elementRegistry.get(elementId);
 
@@ -63,7 +62,7 @@ function copy(modeler, elementId) {
   // retrieve clipboard contents
   var copied = clipboard.get();
 
-  // persist in local storage
+  // persist in local storage, encoded as json
   localStorage.setItem('bpmnClipboard', JSON.stringify(copied));
 }
 
