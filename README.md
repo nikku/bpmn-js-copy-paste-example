@@ -144,7 +144,7 @@ npm install
 npm test -- --auto-watch --no-single-run
 ```
 
-Use `F12` in your browser to open the dev tools to see what the heck is going on.
+Open [`http://localhost:9876/debug.html`](http://localhost:9876/debug.html) in a browser (recommendation: Chrom(ium)) and use `F12` to open the dev tools to see what the heck is going on.
 
 
 ## License
