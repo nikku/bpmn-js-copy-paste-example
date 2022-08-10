@@ -11,6 +11,7 @@ describe('util', function() {
     // given
     const object = { "foo": "BAR" };
 
+    document.body.focus();
     // when
     await writeClipboard(object);
 
