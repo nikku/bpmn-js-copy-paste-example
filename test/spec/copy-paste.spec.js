@@ -1,8 +1,9 @@
-'use strict';
+import BpmnModeler from 'bpmn-js/lib/Modeler';
 
-var BpmnModeler = require('bpmn-js/lib/Modeler').default;
+import { insertCSS } from '../helper';
 
-var sampleDiagram = require('./sample.bpmn');
+import sampleDiagram from './sample.bpmn';
+
 import diagramCSS from 'bpmn-js/dist/assets/diagram-js.css';
 
 import bpmnCSS from 'bpmn-js/dist/assets/bpmn-js.css';
