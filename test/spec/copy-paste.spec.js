@@ -45,6 +45,66 @@ describe('copy-paste', function() {
 
   });
 
+
+  it.only('should natively copy/paste', function(done) {
+
+    const container = modeler.get('canvas').getContainer();
+    const bpmnContainer = container.querySelector('svg');
+
+    bpmnContainer.tabIndex = 0;
+
+    const m_TYPE = 'application/x-bpmn-js';
+
+    /**
+     * @param {ClipboardEvent} event
+     */
+    const copyHandler = event => {
+
+      if (document.activeElement !== bpmnContainer) {
+        return;
+      }
+
+      const clip = modeler.get('clipboard').get();
+
+      console.log("COPY!", document.activeElement);
+
+      event.clipboardData.setData(m_TYPE, "AAA");
+      event.clipboardData.setData('text', '');
+
+      event.preventDefault();
+    };
+
+    /**
+     * @param {ClipboardEvent} event
+     */
+    const pasteHandler = event => {
+
+      console.log(
+        "PASTE: <%s>",
+        event.clipboardData.getData(m_TYPE)
+      );
+    };
+
+    document.body.addEventListener('copy', copyHandler);
+    document.body.addEventListener('cut', copyHandler);
+    document.body.addEventListener('paste', pasteHandler);
+
+    document.body.addEventListener('focusin', event => {
+      console.log(event.target);
+    });
+
+    modeler.importXML(sampleDiagram, function(err) {
+
+      if (err) {
+        return done(err);
+      }
+
+      done();
+    });
+
+  });
+
+
 });
 
 
