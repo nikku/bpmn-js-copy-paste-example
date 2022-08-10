@@ -25,6 +25,10 @@ To copy an element, specify it via its `elementId`. From that point on,
 we'll use only APIs the BPMN modeler provides:
 
 ```javascript
+import {
+  writeClipboard
+} from 'bpmn-js-copy-paste-example';
+
 // element to be copied
 var elementId = ...;
 
@@ -41,8 +45,8 @@ copyPaste.copy(element);
 // retrieve clipboard contents
 var copied = clipboard.get();
 
-// persist in local storage, encoded as json
-localStorage.setItem('bpmnClipboard', JSON.stringify(copied));
+// persist in global clipboard, encoded as json
+await writeClipboard(JSON.stringify(copied));
 ```
 
 
@@ -52,6 +56,10 @@ To paste an element we need to specify the target, as well as the location
 where the element needs to be pasted:
 
 ```javascript
+import {
+  readClipboard
+} from 'bpmn-js-copy-paste-example';
+
 // to be pasted onto...
 var targetId = ...;
 var position = ...;
@@ -61,16 +69,20 @@ var clipboard = modeler.get('clipboard'),
     elementRegistry = modeler.get('elementRegistry'),
     moddle = modeler.get('moddle');
 
-// retrieve from local storage
-var serializedCopy = localStorage.getItem('bpmnClipboard');
+// retrieve from system clipboard
+const serializedCopy = await readClipboard();
+
+if (serializedCopy === null) {
+  return;
+}
 
 // parse tree, reinstantiating contained objects
-var parsedCopy = JSON.parse(serializedCopy, createReviver(moddle));
+const parsedCopy = JSON.parse(serializedCopy, createReviver(moddle));
 
 // put into clipboard
 clipboard.set(parsedCopy);
 
-var pasteContext = {
+const pasteContext = {
   element: elementRegistry.get(targetId),
   point: position
 };
