@@ -1,6 +1,6 @@
 'use strict';
 
-var BpmnModeler = require('bpmn-js/lib/Modeler');
+var BpmnModeler = require('bpmn-js/lib/Modeler').default;
 
 var sampleDiagram = require('./sample.bpmn');
 
