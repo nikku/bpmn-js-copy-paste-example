@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "Example showing how to copy/paste with bpmn-js",
   "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "dev": "karma start",
     "test": "karma start --single-run --no-auto-watch",
@@ -31,6 +32,7 @@
     "karma-sinon-chai": "^2.0.2",
     "karma-webpack": "^5.0.0",
     "mocha": "^10.0.0",
+    "mocha-test-container-support": "^0.2.0",
     "puppeteer": "^16.1.0",
     "sinon": "^14.0.0",
     "sinon-chai": "^3.7.0",
@@ -39,6 +41,7 @@
     "webpack-cli": "^4.10.0"
   },
   "dependencies": {
-    "bpmn-js": "^9.3.2"
+    "bpmn-js": "^9.3.2",
+    "min-dash": "^3.8.1"
   }
 }
