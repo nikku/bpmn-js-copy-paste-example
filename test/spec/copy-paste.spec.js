@@ -3,6 +3,17 @@
 var BpmnModeler = require('bpmn-js/lib/Modeler').default;
 
 var sampleDiagram = require('./sample.bpmn');
+import diagramCSS from 'bpmn-js/dist/assets/diagram-js.css';
+
+import bpmnCSS from 'bpmn-js/dist/assets/bpmn-js.css';
+
+import fontCSS from 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
+
+insertCSS('diagram-js.css', diagramCSS);
+
+insertCSS('bpmn-js.css', bpmnCSS);
+
+insertCSS('bpmn-font.css', fontCSS);
 
 
 describe('copy-paste', function() {
