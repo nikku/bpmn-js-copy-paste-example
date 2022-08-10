@@ -49,6 +49,10 @@ module.exports = function(karma) {
           {
             test: /\.bpmn$/,
             type: 'asset/source'
+          },
+          {
+            test: /\.css$/,
+            type: 'asset/source'
           }
         ].concat(
           coverage ? {
