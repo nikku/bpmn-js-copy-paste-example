@@ -1,6 +1,6 @@
 # bpmn-js-copy-paste-example
 
-[![Build Status](https://travis-ci.com/nikku/bpmn-js-copy-paste-example.svg?branch=master)](https://travis-ci.com/nikku/bpmn-js-copy-paste-example)
+[![CI](https://github.com/nikku/bpmn-js-copy-paste-example/actions/workflows/CI.yml/badge.svg)](https://github.com/nikku/bpmn-js-copy-paste-example/actions/workflows/CI.yml)
 
 This example shows how to copy and paste elements programatically using [bpmn-js](https://github.com/bpmn-io/bpmn-js).
 
