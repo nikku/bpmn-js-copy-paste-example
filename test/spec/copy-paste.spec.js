@@ -1,3 +1,5 @@
+import TestContainer from 'mocha-test-container-support';
+
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 
 import { insertCSS } from '../helper';
@@ -16,59 +18,106 @@ insertCSS('bpmn-js.css', bpmnCSS);
 
 insertCSS('bpmn-font.css', fontCSS);
 
+insertCSS('test', `
+.djs-container svg:focus {
+  outline: none;
+  box-shadow: inset 0px 0px 0px 2px fuchsia;
+}
+
+.test-container {
+  height: auto !important;
+}
+
+.test-container .test-content-container {
+  height: 600px !important;
+}
+`);
+
 
 describe('copy-paste', function() {
 
-  var modeler = new BpmnModeler({
-    container: testContainer()
-  });
+  it('participant', async function() {
 
-
-  it('should copy/paste', function(done) {
-
-    modeler.importXML(sampleDiagram, function(err) {
-
-      if (err) {
-        return done(err);
+    // given
+    const modeler = new BpmnModeler({
+      container: TestContainer.get(this),
+      keyboard: {
+        bindTo: document
       }
-
-      // copy/paste a whole pool
-      copy(modeler, 'POOL');
-      paste(modeler, 'COLLABORATION', { x: 600, y: 400 });
-
-      // copy/paste a start event only
-      copy(modeler, 'START_PROCESS');
-      paste(modeler, 'POOL', { x: 300, y: 130 });
-
-      done();
     });
 
+    await modeler.importXML(sampleDiagram);
+
+    // when
+    copy(modeler, 'POOL');
+
+    paste(modeler, 'COLLABORATION', { x: 600, y: 400 });
+
+    // then
   });
 
 
-  it.only('should natively copy/paste', function(done) {
+  it('start event', async function() {
+
+    // given
+    const modeler = new BpmnModeler({
+      container: TestContainer.get(this),
+      keyboard: {
+        bindTo: document
+      }
+    });
+
+    await modeler.importXML(sampleDiagram);
+
+    // when
+    copy(modeler, 'START_PROCESS');
+
+    paste(modeler, 'POOL', { x: 300, y: 130 });
+
+    // then
+  });
+
+
+  it.only('should natively copy/paste', async function() {
+
+    // given
+    const modeler = new BpmnModeler({
+      container: TestContainer.get(this),
+
+      // binding keyboard will break copy and paste due to event.preventDefault
+      // being called by copy and paste keyboard listeners
+      // keyboard: {
+      //   bindTo: document
+      // }
+    });
+
+    const clipboard = modeler.get('clipboard'),
+          copyPaste = modeler.get('copyPaste'),
+          selection = modeler.get('selection');
+
+    await modeler.importXML(sampleDiagram);
 
     const container = modeler.get('canvas').getContainer();
-    const bpmnContainer = container.querySelector('svg');
 
-    bpmnContainer.tabIndex = 0;
+    const svg = container.querySelector('svg');
 
-    const m_TYPE = 'application/x-bpmn-js';
+    const mimeType = 'application/x-bpmn-js';
 
     /**
      * @param {ClipboardEvent} event
      */
     const copyHandler = event => {
-
-      if (document.activeElement !== bpmnContainer) {
+      if (document.activeElement !== svg) {
         return;
       }
 
-      const clip = modeler.get('clipboard').get();
+      const selectedElements = selection.get();
 
-      console.log("COPY!", document.activeElement);
+      const tree = copyPaste.copy(selectedElements);
 
-      event.clipboardData.setData(m_TYPE, "AAA");
+      console.log("copying", tree, JSON.stringify(clipboard.get()));
+
+      event.clipboardData.setData(mimeType, JSON.stringify(clipboard.get()));
       event.clipboardData.setData('text', '');
 
       event.preventDefault();
@@ -78,11 +127,17 @@ describe('copy-paste', function() {
      * @param {ClipboardEvent} event
      */
     const pasteHandler = event => {
+      console.log('pasting', event.clipboardData.getData(mimeType));
 
-      console.log(
-        "PASTE: <%s>",
-        event.clipboardData.getData(m_TYPE)
-      );
+      const data = event.clipboardData.getData(mimeType);
+
+      const tree = JSON.parse(data, createReviver(modeler._moddle));
+
+      console.log('overriding tree', tree);
+
+      clipboard.set(tree);
+
+      copyPaste.paste();
     };
 
     document.body.addEventListener('copy', copyHandler);
@@ -92,16 +147,6 @@ describe('copy-paste', function() {
     document.body.addEventListener('focusin', event => {
       console.log(event.target);
     });
-
-    modeler.importXML(sampleDiagram, function(err) {
-
-      if (err) {
-        return done(err);
-      }
-
-      done();
-    });
-
   });
 
 
