@@ -39,6 +39,7 @@
     "webpack-cli": "^4.10.0"
   },
   "dependencies": {
-    "bpmn-js": "^9.3.2"
+    "bpmn-js": "^9.3.2",
+    "min-dash": "^3.8.1"
   }
 }

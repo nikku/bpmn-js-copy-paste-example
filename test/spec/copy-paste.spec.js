@@ -2,6 +2,8 @@ import TestContainer from 'mocha-test-container-support';
 
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 
+import NativeCopyPasteModule from '../..';
+
 import { insertCSS } from '../helper';
 
 import sampleDiagram from './sample.bpmn';
@@ -83,66 +85,15 @@ describe('copy-paste', function() {
     // given
     const modeler = new BpmnModeler({
       container: TestContainer.get(this),
-
-      // binding keyboard will break copy and paste due to event.preventDefault
-      // being called by copy and paste keyboard listeners
-      // keyboard: {
-      //   bindTo: document
-      // }
+      additionalModules: [
+        NativeCopyPasteModule
+      ],
+      keyboard: {
+        bindTo: document
+      }
     });
 
-    const clipboard = modeler.get('clipboard'),
-          copyPaste = modeler.get('copyPaste'),
-          selection = modeler.get('selection');
-
     await modeler.importXML(sampleDiagram);
-
-    const container = modeler.get('canvas').getContainer();
-
-    const svg = container.querySelector('svg');
-
-    const mimeType = 'application/x-bpmn-js';
-
-    /**
-     * @param {ClipboardEvent} event
-     */
-    const copyHandler = event => {
-      if (document.activeElement !== svg) {
-        return;
-      }
-
-      const selectedElements = selection.get();
-
-      const tree = copyPaste.copy(selectedElements);
-
-      console.log("copying", tree, JSON.stringify(clipboard.get()));
-
-      event.clipboardData.setData(mimeType, JSON.stringify(clipboard.get()));
-      event.clipboardData.setData('text', '');
-
-      event.preventDefault();
-    };
-
-    /**
-     * @param {ClipboardEvent} event
-     */
-    const pasteHandler = event => {
-      console.log('pasting', event.clipboardData.getData(mimeType));
-
-      const data = event.clipboardData.getData(mimeType);
-
-      const tree = JSON.parse(data, createReviver(modeler._moddle));
-
-      console.log('overriding tree', tree);
-
-      clipboard.set(tree);
-
-      copyPaste.paste();
-    };
-
-    document.body.addEventListener('copy', copyHandler);
-    document.body.addEventListener('cut', copyHandler);
-    document.body.addEventListener('paste', pasteHandler);
 
     document.body.addEventListener('focusin', event => {
       console.log(event.target);
