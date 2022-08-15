@@ -1,5 +1,7 @@
 # bpmn-js-copy-paste-example
 
+[![CI](https://github.com/nikku/bpmn-js-copy-paste-example/actions/workflows/CI.yml/badge.svg)](https://github.com/nikku/bpmn-js-copy-paste-example/actions/workflows/CI.yml)
+
 An example implementation of copy and paste using the native clipboard. Allows you to copy and paste across applications. Want to paste into Microsoft Word? Go ahead!
 
 ## Setup
