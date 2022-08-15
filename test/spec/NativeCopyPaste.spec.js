@@ -1,5 +1,11 @@
 import TestContainer from 'mocha-test-container-support';
 
+import fileDrop from 'file-drops';
+
+import fileOpen from 'file-open';
+
+import download from 'downloadjs';
+
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 
 import {
@@ -22,6 +28,7 @@ import bpmnCSS from 'bpmn-js/dist/assets/bpmn-js.css';
 import fontCSS from 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
 
 import propertiesPanelCSS from "bpmn-js-properties-panel/dist/assets/properties-panel.css";
+import fileDropsCSS from "./file-drops.css";
 
 insertCSS('diagram-js.css', diagramCSS);
 
@@ -30,6 +37,8 @@ insertCSS('bpmn-js.css', bpmnCSS);
 insertCSS('bpmn-font.css', fontCSS);
 
 insertCSS('properties.css', propertiesPanelCSS);
+
+insertCSS('file-drops.css', fileDropsCSS);
 
 insertCSS('test', `
 .test-container {
@@ -84,9 +93,59 @@ describe('NativeCopyPaste', function() {
 
     await modeler.importXML(require('./ticket-booking.bpmn'));
 
-    document.body.addEventListener('focusin', event => {
-      console.log(event.target);
+    modeler.get('canvas')._svg.tabIndex = 0;
+
+    var fileName = './ticket-booking.bpmn';
+
+    function openDiagram(diagram) {
+      return modeler.importXML(diagram)
+        .then(({ warnings }) => {
+          if (warnings.length) {
+            console.warn(warnings);
+          }
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    }
+
+    function openFile(files) {
+
+      // files = [ { name, contents }, ... ]
+
+      if (!files.length) {
+        return;
+      }
+
+      fileName = files[0].name;
+
+      openDiagram(files[0].contents);
+    }
+
+    document.body.addEventListener('dragover', fileDrop('Open BPMN diagram', openFile), false);
+
+    function downloadDiagram() {
+      modeler.saveXML({ format: true }, function(err, xml) {
+        if (!err) {
+          download(xml, fileName, 'application/xml');
+        }
+      });
+    }
+
+    document.body.addEventListener('keydown', function(event) {
+      if (event.code === 'KeyS' && (event.metaKey || event.ctrlKey)) {
+        event.preventDefault();
+
+        downloadDiagram();
+      }
+
+      if (event.code === 'KeyO' && (event.metaKey || event.ctrlKey)) {
+        event.preventDefault();
+
+        fileOpen().then(openFile);
+      }
     });
+
   });
 
 });
