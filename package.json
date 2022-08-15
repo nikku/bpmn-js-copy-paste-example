@@ -5,7 +5,8 @@
   "main": "lib/index.js",
   "scripts": {
     "dev": "karma start",
-    "test": "karma start --single-run --no-auto-watch"
+    "test": "karma start --single-run --no-auto-watch",
+    "all": "npm test"
   },
   "repository": {
     "type": "git",
