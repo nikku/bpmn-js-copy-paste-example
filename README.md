@@ -5,6 +5,15 @@
 Copy and paste for [bpmn-js](https://github.com/bpmn-io/bpmn-js) implemented using the native operating system clipboard. Also, works across browser and application windows.
 
 
+## Features
+
+* copy and paste using the system clipboard
+* works between different BPMN modeler instances
+* works across browser windows (!)
+* requires modern browsers
+* disables built-in copy/paste keybindings
+
+
 ## Usage
 
 ```javascript
@@ -22,6 +31,11 @@ const modeler = new BpmnModeler({
 
 await modeler.importXML(require('./ticket-booking.bpmn'));
 ```
+
+
+## How it Works
+
+It relies on the bpmn-js copy tree to be serializable to JSON. When re-creating the tree from JSON we use a [reviver](https://github.com/nikku/bpmn-js-native-copy-paste/blob/master/lib/NativeCopyPaste.js#L125) to re-construct the model types.
 
 
 ## Build and Run
