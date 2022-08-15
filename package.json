@@ -1,8 +1,7 @@
 {
-  "name": "bpmn-js-copy-paste-example",
+  "name": "bpmn-js-native-copy-paste",
   "version": "0.0.0",
-  "description": "Example showing how to copy/paste with bpmn-js",
-  "main": "index.js",
+  "description": "Copy and paste between bpmn-js instances using the system clipboard",
   "main": "lib/index.js",
   "scripts": {
     "dev": "karma start",
@@ -10,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nikku/bpmn-js-copy-paste-example.git"
+    "url": "git+https://github.com/nikku/bpmn-js-native-copy-paste.git"
   },
   "keywords": [
     "bpmn-js"
@@ -18,9 +17,9 @@
   "author": "Nico Rehwaldt",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nikku/bpmn-js-copy-paste-example/issues"
+    "url": "https://github.com/nikku/bpmn-js-native-copy-paste/issues"
   },
-  "homepage": "https://github.com/nikku/bpmn-js-copy-paste-example#readme",
+  "homepage": "https://github.com/nikku/bpmn-js-native-copy-paste#readme",
   "devDependencies": {
     "@bpmn-io/properties-panel": "^0.18.0",
     "bpmn-js": "^9.3.2",
