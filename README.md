@@ -2,9 +2,10 @@
 
 [![CI](https://github.com/nikku/bpmn-js-native-copy-paste/actions/workflows/CI.yml/badge.svg)](https://github.com/nikku/bpmn-js-native-copy-paste/actions/workflows/CI.yml)
 
-An example implementation of copy and paste using the native clipboard. Allows you to copy and paste across applications. Want to paste into Microsoft Word? Go ahead!
+Copy and paste for [bpmn-js](https://github.com/bpmn-io/bpmn-js) implemented using the native operating system clipboard. Also, works across browser and application windows.
 
-## Setup
+
+## Usage
 
 ```javascript
 import NativeCopyPaste from 'bpmn-js-native-copy-paste';
@@ -22,17 +23,18 @@ const modeler = new BpmnModeler({
 await modeler.importXML(require('./ticket-booking.bpmn'));
 ```
 
-## Run the Example
+
+## Build and Run
 
 ```sh
 # install dependencies
 npm install
 
-# run in Chrome
+# run development setup
 npm run dev
 ```
 
-Open [`http://localhost:9876/debug.html`](http://localhost:9876/debug.html) in a browser (recommendation: Chrom(ium)) and use `F12` to open the dev tools to see what the heck is going on.
+Open multiple instances of the [test site](http://localhost:9876/debug.html) and copy/paste across.
 
 
 ## License
