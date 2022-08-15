@@ -22,8 +22,10 @@
   "homepage": "https://github.com/nikku/bpmn-js-copy-paste-example#readme",
   "devDependencies": {
     "@bpmn-io/properties-panel": "^0.18.0",
+    "bpmn-js": "^9.3.2",
     "bpmn-js-properties-panel": "^1.4.0",
     "chai": "^4.3.6",
+    "diagram-js": "^8.7.1",
     "downloadjs": "^1.4.7",
     "file-drops": "^0.4.0",
     "file-open": "^0.1.1",
@@ -45,7 +47,6 @@
     "zeebe-bpmn-moddle": "^0.12.1"
   },
   "dependencies": {
-    "bpmn-js": "^9.3.2",
     "min-dash": "^3.8.1"
   }
 }
