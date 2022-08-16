@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "karma start",
     "test": "karma start --single-run --no-auto-watch",
-    "all": "npm test"
+    "all": "npm test",
+    "start": "npm run dev"
   },
   "repository": {
     "type": "git",
