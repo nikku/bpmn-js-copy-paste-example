@@ -80,9 +80,6 @@ describe('NativeCopyPaste', function() {
         BpmnPropertiesProviderModule,
         ZeebePropertiesProviderModule
       ],
-      keyboard: {
-        bindTo: document
-      },
       moddleExtensions: {
         zeebe: zeebeModdlePackage
       },

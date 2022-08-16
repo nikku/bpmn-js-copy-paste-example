@@ -23,7 +23,7 @@
   "homepage": "https://github.com/nikku/bpmn-js-native-copy-paste#readme",
   "devDependencies": {
     "@bpmn-io/properties-panel": "^0.18.0",
-    "bpmn-js": "^9.3.2",
+    "bpmn-js": "github:bpmn-io/bpmn-js#keyboard-bind",
     "bpmn-js-properties-panel": "^1.4.0",
     "chai": "^4.3.6",
     "diagram-js": "^8.7.1",
