@@ -1,66 +1,72 @@
-'use strict';
+const path = require('path');
 
-// be able to specify test browsers via CLI
-var testBrowsers = (process.env.TEST_BROWSERS || 'Chrome').split('\s*,\s*');
+var coverage = process.env.COVERAGE;
 
-if (process.env.CI) {
-  testBrowsers = [ 'ChromeHeadless' ];
-}
+// configures browsers to run test against
+// any of [ 'ChromeHeadless', 'Chrome', 'Firefox' ]
+const browsers = (process.env.TEST_BROWSERS || 'Debug').split(',');
 
-// workaround https://github.com/GoogleChrome/puppeteer/issues/290
-testBrowsers = testBrowsers.map(function(browser) {
+// use puppeteer provided Chrome for testing
+process.env.CHROME_BIN = require('puppeteer').executablePath();
 
-  if (browser === 'ChromeHeadless') {
-    process.env.CHROME_BIN = require('puppeteer').executablePath();
+const absoluteBasePath = path.resolve(__dirname);
 
-    if (process.platform === 'linux') {
-      return 'ChromeHeadless_Linux';
-    }
-  }
-
-  return browser;
-});
-
+const suite = 'test/copy-paste.js';
 
 module.exports = function(karma) {
   karma.set({
 
     frameworks: [
-      'browserify',
       'mocha',
-      'chai'
+      'sinon-chai',
+      'webpack'
     ],
 
     files: [
-      'test/*.js'
+      suite
     ],
 
     preprocessors: {
-      'test/*.js': [ 'browserify' ]
+      [suite]: [ 'webpack' ]
     },
 
-    browsers: testBrowsers,
+    browsers,
 
-    customLaunchers: {
-      ChromeHeadless_Linux: {
-        base: 'ChromeHeadless',
-        flags: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox'
-        ],
-        debug: true
-      }
+    coverageReporter: {
+      reporters: [
+        { type: 'lcov', subdir: '.' }
+      ]
     },
 
     singleRun: false,
     autoWatch: true,
 
-    // browserify configuration
-    browserify: {
-      debug: true,
-      transform: [
-        [ 'stringify', { extensions: [ '.bpmn' ] } ]
-      ]
+    webpack: {
+      mode: 'development',
+      target: 'browserslist:last 2 versions, IE 11',
+      module: {
+        rules: [
+          {
+            test: /\.bpmn$/,
+            type: 'asset/source'
+          },
+          {
+            test: /\.css$/,
+            type: 'asset/source'
+          }
+        ]
+      },
+      resolve: {
+        mainFields: [
+          'module',
+          'main'
+        ],
+        modules: [
+          'node_modules',
+          absoluteBasePath
+        ]
+      },
+      devtool: 'eval-source-map'
     }
   });
 
