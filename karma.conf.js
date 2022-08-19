@@ -1,7 +1,5 @@
 const path = require('path');
 
-var coverage = process.env.COVERAGE;
-
 // configures browsers to run test against
 // any of [ 'ChromeHeadless', 'Chrome', 'Firefox' ]
 const browsers = (process.env.TEST_BROWSERS || 'Debug').split(',');
@@ -31,12 +29,6 @@ module.exports = function(karma) {
     },
 
     browsers,
-
-    coverageReporter: {
-      reporters: [
-        { type: 'lcov', subdir: '.' }
-      ]
-    },
 
     singleRun: false,
     autoWatch: true,
