@@ -4,7 +4,7 @@ import sampleDiagram from './sample.bpmn';
 
 import {
   insertCSS
-} from 'bpmn-js/test/helper';
+} from './helper';
 
 import diagramCSS from 'bpmn-js/dist/assets/diagram-js.css';
 import bpmnCSS from 'bpmn-js/dist/assets/bpmn-js.css';
