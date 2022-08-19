@@ -4,7 +4,8 @@
   "description": "Example showing how to copy/paste with bpmn-js",
   "main": "index.js",
   "scripts": {
-    "test": "karma start --single-run --no-auto-watch"
+    "test": "karma start --single-run --no-auto-watch",
+    "all": "npm test"
   },
   "repository": {
     "type": "git",
