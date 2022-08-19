@@ -10,8 +10,8 @@ This example shows how to copy and paste elements programatically using [bpmn-js
 ## Features
 
 * copy and paste between different BPMN modeler instances
-* works even across browser windows (!)
-* fully scripted
+* works across browser windows (synchronized via [local storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage))
+* fully scriptable
 * may be operated by humans, too :wink:
 
 
@@ -70,13 +70,14 @@ var parsedCopy = JSON.parse(serializedCopy, createReviver(moddle));
 // put into clipboard
 clipboard.set(parsedCopy);
 
-var pasteContext = {
+// paste tree directly
+copyPaste.paste({
   element: elementRegistry.get(targetId),
   point: position
-};
+});
 
-// paste tree
-copyPaste.paste(pasteContext);
+// alternatively paste using two-step pasting
+copyPaste.paste();
 ```
 
 
