@@ -16,11 +16,61 @@ import diagramCSS from 'bpmn-js/dist/assets/diagram-js.css';
 import bpmnCSS from 'bpmn-js/dist/assets/bpmn-js.css';
 import bpmnFontCSS from 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
 
+import {
+  isPaste
+} from 'diagram-js/lib/features/keyboard/KeyboardUtil';
+
 insertCSS('file-drops.css', fileDropCSS);
 
 insertCSS('diagram-js.css', diagramCSS);
 insertCSS('bpmn-font.css', bpmnFontCSS);
 insertCSS('bpmn-js.css', bpmnCSS);
+
+
+const nativeCopyModule = {
+  __init__: [ 'nativeCopyPaste' ],
+  nativeCopyPaste: [ 'type', function(
+      keyboard, eventBus,
+      moddle, clipboard
+    ) {
+
+    // persist into local storage whenever
+    // copy took place
+    eventBus.on('copyPaste.elementsCopied', event => {
+      const { tree } = event;
+
+      console.log('PUT localStorage', tree);
+
+      // persist in local storage, encoded as json
+      localStorage.setItem('bpmnClipboard', JSON.stringify(tree));
+    });
+
+    // intercept global paste keybindings and
+    // inject reified pasted stack
+    keyboard.addListener(2000, event => {
+      const { keyEvent } = event;
+
+      if (!isPaste(keyEvent)) {
+        return;
+      }
+
+      // retrieve from local storage
+      const serializedCopy = localStorage.getItem('bpmnClipboard');
+
+      if (!serializedCopy) {
+        return;
+      }
+
+      // parse tree, reinstantiating contained objects
+      const parsedCopy = JSON.parse(serializedCopy, createReviver(moddle));
+
+      console.log('GET localStorage', parsedCopy);
+
+      // put into clipboard
+      clipboard.set(parsedCopy);
+    });
+  } ]
+}
 
 
 describe('copy-paste', function() {
@@ -29,6 +79,9 @@ describe('copy-paste', function() {
 
     const modeler = new BpmnModeler({
       container: testContainer(),
+      additionalModules: [
+        nativeCopyModule
+      ],
       keyboard: {
         bindTo: document.body
       }
@@ -36,16 +89,8 @@ describe('copy-paste', function() {
 
     await modeler.importXML(sampleDiagram);
 
-    // with keyboard integration
-    setupKeyboard(modeler, 'sample.bpmn');
-
-    // copy/paste a whole pool
-    copy(modeler, 'POOL');
-    paste(modeler, 'COLLABORATION', { x: 600, y: 400 });
-
-    // copy/paste a start event only
-    copy(modeler, 'START_PROCESS');
-    paste(modeler, 'POOL', { x: 300, y: 130 });
+    // with app like behavior
+    setupApp(modeler, 'sample.bpmn');
   });
 
 });
@@ -53,7 +98,7 @@ describe('copy-paste', function() {
 
 /////////////// helpers //////////////////////////
 
-function setupKeyboard(modeler, fileName) {
+function setupApp(modeler, fileName) {
 
   function openDiagram(diagram) {
     return modeler.importXML(diagram)
@@ -111,68 +156,6 @@ function setupKeyboard(modeler, fileName) {
     document.body.removeEventListener('keydown', handleKeys);
     document.body.removeEventListener('dragover', handleDragOver);
   };
-}
-
-/**
- * For the given modeler, copy an element to
- * localStorage.
- *
- * @param  {BpmnModeler} modeler
- * @param  {String} elementId
- * @param  {String} target
- * @param  {Point} position
- */
-function copy(modeler, elementId) {
-
-  var clipboard = modeler.get('clipboard'),
-      copyPaste = modeler.get('copyPaste'),
-      elementRegistry = modeler.get('elementRegistry');
-
-  // get element to be copied
-  var element = elementRegistry.get(elementId);
-
-  // copy!
-  copyPaste.copy(element);
-
-  // retrieve clipboard contents
-  var copied = clipboard.get();
-
-  // persist in local storage, encoded as json
-  localStorage.setItem('bpmnClipboard', JSON.stringify(copied));
-}
-
-
-/**
- * For the given modeler retrieved copied elements from
- * localStorage and paste them onto the specified target.
- *
- * @param  {BpmnModeler} modeler
- * @param  {String} target
- * @param  {Point} position
- */
-function paste(modeler, targetId, position) {
-
-  var clipboard = modeler.get('clipboard'),
-      copyPaste = modeler.get('copyPaste'),
-      elementRegistry = modeler.get('elementRegistry'),
-      moddle = modeler.get('moddle');
-
-  // retrieve from local storage
-  var serializedCopy = localStorage.getItem('bpmnClipboard');
-
-  // parse tree, reinstantiating contained objects
-  var parsedCopy = JSON.parse(serializedCopy, createReviver(moddle));
-
-  // put into clipboard
-  clipboard.set(parsedCopy);
-
-  var pasteContext = {
-    element: elementRegistry.get(targetId),
-    point: position
-  };
-
-  // paste tree
-  copyPaste.paste(pasteContext);
 }
 
 /**
