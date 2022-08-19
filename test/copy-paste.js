@@ -2,6 +2,17 @@ import BpmnModeler from 'bpmn-js/lib/Modeler';
 
 import sampleDiagram from './sample.bpmn';
 
+import {
+  insertCSS
+} from 'bpmn-js/test/helper';
+
+import diagramCSS from 'bpmn-js/dist/assets/diagram-js.css';
+import bpmnCSS from 'bpmn-js/dist/assets/bpmn-js.css';
+import bpmnFontCSS from 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
+
+insertCSS('diagram-js.css', diagramCSS);
+insertCSS('bpmn-font.css', bpmnFontCSS);
+insertCSS('bpmn-js.css', bpmnCSS);
 
 
 describe('copy-paste', function() {
