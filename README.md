@@ -141,10 +141,10 @@ Checkout the full example [here](./test/copy-paste.js).
 npm install
 
 # run in Chrome
-npm test -- --auto-watch --no-single-run
+npm run dev
 ```
 
-Open [`http://localhost:9876/debug.html`](http://localhost:9876/debug.html) in a browser (recommendation: Chrom(ium)) and use `F12` to open the dev tools to see what the heck is going on.
+Open multiple instances of the [test site](http://localhost:9876/debug.html) and copy/paste across.
 
 
 ## License
