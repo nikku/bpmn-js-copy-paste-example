@@ -20,4 +20,6 @@ jobs:
     - name: Install dependencies
       run: npm ci
     - name: Build
+      env:
+        TEST_BROWSERS: ChromeHeadless
       run: npm run all

@@ -1,8 +1,7 @@
-'use strict';
+import BpmnModeler from 'bpmn-js/lib/Modeler';
 
-var BpmnModeler = require('bpmn-js/lib/Modeler');
+import sampleDiagram from './sample.bpmn';
 
-var sampleDiagram = require('./sample.bpmn');
 
 
 describe('copy-paste', function() {

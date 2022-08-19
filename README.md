@@ -140,7 +140,7 @@ Checkout the full example [here](./test/copy-paste.js).
 # install dependencies
 npm install
 
-# run in Chrome
+# run in browser
 npm run dev
 ```
 
