@@ -23,6 +23,9 @@
   "homepage": "https://github.com/nikku/bpmn-js-copy-paste-example#readme",
   "devDependencies": {
     "chai": "^4.3.6",
+    "downloadjs": "^1.4.7",
+    "file-drops": "^0.4.0",
+    "file-open": "^0.1.1",
     "karma": "^6.4.0",
     "karma-chrome-launcher": "^3.1.1",
     "karma-debug-launcher": "0.0.5",

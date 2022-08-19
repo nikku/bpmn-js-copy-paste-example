@@ -6,9 +6,17 @@ import {
   insertCSS
 } from './helper';
 
+import fileDrop from 'file-drops';
+import fileOpen from 'file-open';
+import download from 'downloadjs';
+
+import fileDropCSS from './file-drops.css';
+
 import diagramCSS from 'bpmn-js/dist/assets/diagram-js.css';
 import bpmnCSS from 'bpmn-js/dist/assets/bpmn-js.css';
 import bpmnFontCSS from 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
+
+insertCSS('file-drops.css', fileDropCSS);
 
 insertCSS('diagram-js.css', diagramCSS);
 insertCSS('bpmn-font.css', bpmnFontCSS);
@@ -17,36 +25,93 @@ insertCSS('bpmn-js.css', bpmnCSS);
 
 describe('copy-paste', function() {
 
-  var modeler = new BpmnModeler({
-    container: testContainer()
-  });
+  it('should copy/paste', async function() {
 
-
-  it('should copy/paste', function(done) {
-
-    modeler.importXML(sampleDiagram, function(err) {
-
-      if (err) {
-        return done(err);
+    const modeler = new BpmnModeler({
+      container: testContainer(),
+      keyboard: {
+        bindTo: document.body
       }
-
-      // copy/paste a whole pool
-      copy(modeler, 'POOL');
-      paste(modeler, 'COLLABORATION', { x: 600, y: 400 });
-
-      // copy/paste a start event only
-      copy(modeler, 'START_PROCESS');
-      paste(modeler, 'POOL', { x: 300, y: 130 });
-
-      done();
     });
 
+    await modeler.importXML(sampleDiagram);
+
+    // with keyboard integration
+    setupKeyboard(modeler, 'sample.bpmn');
+
+    // copy/paste a whole pool
+    copy(modeler, 'POOL');
+    paste(modeler, 'COLLABORATION', { x: 600, y: 400 });
+
+    // copy/paste a start event only
+    copy(modeler, 'START_PROCESS');
+    paste(modeler, 'POOL', { x: 300, y: 130 });
   });
 
 });
 
 
 /////////////// helpers //////////////////////////
+
+function setupKeyboard(modeler, fileName) {
+
+  function openDiagram(diagram) {
+    return modeler.importXML(diagram)
+      .then(({ warnings }) => {
+        if (warnings.length) {
+          console.warn(warnings);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
+
+  function openFile(files) {
+
+    // files = [ { name, contents }, ... ]
+
+    if (!files.length) {
+      return;
+    }
+
+    fileName = files[0].name;
+
+    openDiagram(files[0].contents);
+  }
+
+  function downloadDiagram() {
+    modeler.saveXML({ format: true }, function(err, xml) {
+      if (!err) {
+        download(xml, fileName, 'application/xml');
+      }
+    });
+  }
+
+  const handleDragOver = fileDrop('Open BPMN diagram', openFile);
+
+  const handleKeys = (event) => {
+    if (event.code === 'KeyS' && (event.metaKey || event.ctrlKey)) {
+      event.preventDefault();
+
+      downloadDiagram();
+    }
+
+    if (event.code === 'KeyO' && (event.metaKey || event.ctrlKey)) {
+      event.preventDefault();
+
+      fileOpen().then(openFile);
+    }
+  };
+
+  document.body.addEventListener('keydown', handleKeys);
+  document.body.addEventListener('dragover', handleDragOver);
+
+  return () => {
+    document.body.removeEventListener('keydown', handleKeys);
+    document.body.removeEventListener('dragover', handleDragOver);
+  };
+}
 
 /**
  * For the given modeler, copy an element to
