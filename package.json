@@ -39,6 +39,6 @@
     "webpack": "^5.74.0"
   },
   "dependencies": {
-    "bpmn-js": "github:bpmn-io/bpmn-js#clg"
+    "bpmn-js": "^9.4.0"
   }
 }
